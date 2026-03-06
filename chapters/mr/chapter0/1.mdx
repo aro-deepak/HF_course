@@ -1,120 +1,126 @@
+
 # परिचय[[introduction]]
 
-Hugging Face कोर्समध्ये तुमचे स्वागत आहे! हा परिचय तुम्हाला working environment सेट करण्यासाठी मार्गदर्शन करेल. जर तुम्ही हा कोर्स नुकताच सुरू करत असाल, तर आम्ही प्रथम [Chapter 1](/course/chapter1) पाहण्याची शिफारस करतो, त्यानंतर येथे परत येऊन तुमचे environment सेट करा जेणेकरून तुम्ही स्वतः कोड वापरून पाहू शकता.
+Hugging Face कोर्समध्ये आपले स्वागत आहे! हा परिचय तुम्हाला कार्यरत वातावरण (working environment) सेट करण्यासाठी मार्गदर्शन करेल. जर तुम्ही हा कोर्स नुकताच सुरू करत असाल, तर आम्ही प्रथम [Chapter 1](/course/chapter1) पाहण्याची शिफारस करतो, त्यानंतर येथे परत येऊन तुमचे वातावरण सेट करा जेणेकरून तुम्ही कोड स्वतः वापरून पाहू शकाल.
 
-या कोर्समध्ये आपण वापरणार असलेल्या सर्व libraries Python packages म्हणून उपलब्ध आहेत. त्यामुळे येथे आपण Python environment कसे सेट करायचे आणि तुम्हाला लागणाऱ्या specific libraries कशा install करायच्या ते पाहू.
+या कोर्समध्ये आपण वापरणाऱ्या सर्व लायब्ररी Python पॅकेजेस म्हणून उपलब्ध आहेत, त्यामुळे येथे आपण Python वातावरण कसे सेट करायचे आणि आवश्यक लायब्ररी कशा इन्स्टॉल करायच्या हे पाहणार आहोत.
 
-आपण working environment सेट करण्याच्या दोन पद्धती पाहू: **Colab notebook वापरून** किंवा **Python virtual environment वापरून**. तुम्हाला सोयीची वाटणारी पद्धत निवडा. जर तुम्ही beginner असाल, तर Colab notebook वापरून सुरुवात करण्याची आम्ही जोरदार शिफारस करतो.
+आपले कार्यरत वातावरण सेट करण्यासाठी आपण दोन पद्धती पाहणार आहोत: Colab notebook वापरणे किंवा Python virtual environment वापरणे. तुमच्यासाठी जी पद्धत अधिक सोयीची वाटते ती निवडा. नवशिक्यांसाठी आम्ही Colab notebook वापरून सुरुवात करण्याची जोरदार शिफारस करतो.
 
-ध्यानात घ्या की या मार्गदर्शनात Windows system बद्दल माहिती दिलेली नाही. जर तुम्ही Windows वापरत असाल, तर Colab notebook वापरून पुढे जाण्याची शिफारस केली जाते. जर तुम्ही Linux distribution किंवा macOS वापरत असाल, तर येथे दिलेल्या दोन्ही पद्धतींपैकी कोणतीही वापरू शकता.
+लक्षात ठेवा की या मार्गदर्शकात Windows प्रणालीसाठी माहिती दिलेली नाही. जर तुम्ही Windows वापरत असाल, तर Colab notebook वापरणे आम्ही सुचवतो. जर तुम्ही Linux distribution किंवा macOS वापरत असाल, तर येथे दिलेल्या कोणत्याही पद्धतीचा वापर करू शकता.
 
-या कोर्सचा मोठा भाग वापरण्यासाठी Hugging Face account आवश्यक आहे. त्यामुळे आत्ताच एक account तयार करण्याची शिफारस केली जाते: [create an account](https://huggingface.co/join).
+या कोर्समधील बहुतेक भागांसाठी तुम्हाला Hugging Face खाते आवश्यक असेल. त्यामुळे आम्ही आत्ताच खाते तयार करण्याची शिफारस करतो: https://huggingface.co/join
 
----
+## Google Colab notebook वापरणे[[using-a-google-colab-notebook]]
 
-## Using a Google Colab notebook[[using-a-google-colab-notebook]]
+Colab notebook वापरणे ही सर्वात सोपी पद्धत आहे; तुमच्या ब्राउझरमध्ये notebook सुरू करा आणि थेट कोडिंग सुरू करा!
 
-Colab notebook वापरणे ही सर्वात सोपी setup पद्धत आहे; तुमच्या browser मध्ये notebook सुरू करा आणि लगेच coding सुरू करा!
+जर तुम्हाला Colab बद्दल माहिती नसेल, तर आम्ही प्रथम हा परिचय पाहण्याची शिफारस करतो:
+https://colab.research.google.com/notebooks/intro.ipynb
 
-जर तुम्ही Colab शी परिचित नसाल, तर प्रथम [introduction](https://colab.research.google.com/notebooks/intro.ipynb) पाहण्याची शिफारस करतो. Colab तुम्हाला GPUs किंवा TPUs सारखे accelerating hardware वापरण्याची सुविधा देते आणि लहान workloads साठी ते मोफत उपलब्ध आहे.
+Colab तुम्हाला GPUs किंवा TPUs सारखे hardware accelerators वापरण्याची सुविधा देते, आणि लहान workloads साठी ते विनामूल्य आहे.
 
-Colab मध्ये काम करण्याची सवय झाल्यावर, एक नवीन notebook तयार करा आणि setup सुरू करा:
+Colab मध्ये काम करण्याची सवय झाल्यावर, एक नवीन notebook तयार करा आणि खालीलप्रमाणे सेटअप सुरू करा.
 
-<div class="flex justify-center">
-<img src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter0/new_colab.png" alt="An empty colab notebook" width="80%"/>
-</div>
+पुढील टप्पा म्हणजे या कोर्समध्ये वापरणाऱ्या लायब्ररी इन्स्टॉल करणे. इन्स्टॉलेशनसाठी आपण `pip` वापरणार आहोत, जो Python साठीचा package manager आहे.
 
-पुढील पायरी म्हणजे या कोर्समध्ये वापरल्या जाणाऱ्या libraries install करणे. Installation साठी आपण `pip` वापरणार आहोत, जो Python चा package manager आहे. Notebook मध्ये system commands चालवण्यासाठी त्यापूर्वी `!` character वापरला जातो. त्यामुळे 🤗 Transformers library खालीलप्रमाणे install करू शकता:
+Notebook मध्ये system commands चालवण्यासाठी त्याच्या आधी `!` हे चिन्ह वापरले जाते.
 
 ```
 !pip install transformers
 ```
 
-Python runtime मध्ये import करून package योग्यरीत्या install झाले आहे की नाही ते तपासू शकता:
+पॅकेज योग्यरित्या इन्स्टॉल झाले आहे की नाही हे तपासण्यासाठी ते Python runtime मध्ये import करून पाहू शकता:
 
 ```
 import transformers
 ```
 
-<div class="flex justify-center">
-<img src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter0/install.gif" alt="A gif showing the result of the two commands above: installation and import" width="80%"/>
-</div>
+यामुळे 🤗 Transformers ची अतिशय हलकी आवृत्ती इन्स्टॉल होते. विशेषतः, कोणतेही machine learning frameworks (जसे PyTorch किंवा TensorFlow) यामध्ये इन्स्टॉल केलेले नसतात.
 
-हे 🤗 Transformers चे एक हलके version install करते. विशेषतः, कोणतेही specific machine learning frameworks (जसे PyTorch किंवा TensorFlow) install केलेले नसतात. कारण आपण library मधील अनेक features वापरणार आहोत, त्यामुळे development version install करण्याची शिफारस केली जाते. यात जवळजवळ सर्व वापरासाठी आवश्यक dependencies असतात:
+कारण आपण या लायब्ररीच्या अनेक वेगवेगळ्या वैशिष्ट्यांचा वापर करणार आहोत, त्यामुळे आम्ही development version इन्स्टॉल करण्याची शिफारस करतो.
 
 ```
 !pip install transformers[sentencepiece]
 ```
 
-यासाठी थोडा वेळ लागू शकतो, पण त्यानंतर तुम्ही उर्वरित कोर्ससाठी तयार असाल!
+यासाठी थोडा वेळ लागू शकतो, परंतु त्यानंतर तुम्ही उर्वरित कोर्ससाठी पूर्णपणे तयार असाल!
 
----
+## Python virtual environment वापरणे[[using-a-python-virtual-environment]]
 
-## Using a Python virtual environment[[using-a-python-virtual-environment]]
+जर तुम्हाला Python virtual environment वापरायचे असेल, तर पहिला टप्पा म्हणजे तुमच्या प्रणालीवर Python इन्स्टॉल करणे.
 
-जर तुम्हाला Python virtual environment वापरायचा असेल, तर पहिली पायरी म्हणजे तुमच्या system वर Python install करणे. सुरुवात करण्यासाठी [this guide](https://realpython.com/installing-python/) पाहण्याची शिफारस केली जाते.
+सुरुवात करण्यासाठी हा मार्गदर्शक वापरा:
+https://realpython.com/installing-python/
 
-Python install झाल्यानंतर, तुम्ही terminal मध्ये Python commands चालवू शकता. पुढील पायऱ्यांपूर्वी ते योग्यरीत्या install झाले आहे की नाही हे तपासण्यासाठी खालील command वापरू शकता: `python --version`. यामुळे तुमच्या system वर उपलब्ध असलेली Python version दिसेल.
+Python इन्स्टॉल झाल्यानंतर तुम्ही तुमच्या terminal मध्ये Python commands चालवू शकता.
 
-Terminal मध्ये `python --version` सारखा Python command चालवताना, त्या command ला चालवणारा program तुमच्या system वरील "main" Python installation असतो. आम्ही सुचवतो की या main installation मध्ये कोणतेही packages install करू नयेत आणि प्रत्येक application साठी वेगळे environment तयार करावे — यामुळे प्रत्येक application ला त्याचे स्वतंत्र dependencies आणि packages मिळतात आणि compatibility issues टाळता येतात.
+ते योग्यरित्या इन्स्टॉल झाले आहे का हे तपासण्यासाठी:
 
-Python मध्ये हे [*virtual environments*](https://docs.python.org/3/tutorial/venv.html) वापरून केले जाते. हे self-contained directory trees असतात ज्यामध्ये एक विशिष्ट Python version आणि application साठी लागणारे packages असतात. असे virtual environment तयार करण्यासाठी अनेक tools उपलब्ध आहेत, पण येथे आपण official Python package वापरणार आहोत ज्याचे नाव [`venv`](https://docs.python.org/3/library/venv.html#module-venv) आहे.
+`python --version`
 
-प्रथम, तुमचे application ज्या directory मध्ये ठेवायचे आहे ती directory तयार करा — उदाहरणार्थ, home directory मध्ये *transformers-course* नावाची directory तयार करू शकता:
+यामुळे तुमच्या प्रणालीवर उपलब्ध असलेली Python ची आवृत्ती दिसेल.
+
+Terminal मध्ये Python command चालवताना तो command चालवणारा Python हा तुमच्या प्रणालीवरील "main" Python समजा.
+
+मुख्य installation मध्ये packages इन्स्टॉल न करता प्रत्येक application साठी वेगळे environment तयार करणे चांगले असते.
+
+Python मध्ये हे virtual environments वापरून केले जाते:
+https://docs.python.org/3/tutorial/venv.html
+
+Virtual environment म्हणजे स्वतंत्र directory असते ज्यामध्ये Python installation आणि त्या application साठी आवश्यक packages असतात.
+
+आपण Python चे अधिकृत `venv` module वापरणार आहोत:
+https://docs.python.org/3/library/venv.html#module-venv
+
+प्रथम directory तयार करा:
 
 ```
 mkdir ~/transformers-course
 cd ~/transformers-course
 ```
 
-या directory मध्ये जाऊन Python `venv` module वापरून virtual environment तयार करा:
+यानंतर virtual environment तयार करा:
 
 ```
 python -m venv .env
 ```
 
-आता तुमच्या रिकाम्या folder मध्ये *.env* नावाची directory तयार झालेली असेल:
+आता `.env` नावाची directory तयार झालेली असेल:
 
 ```
 ls -a
 ```
 
-```out
+```
 .      ..    .env
 ```
 
-`activate` आणि `deactivate` scripts वापरून तुम्ही virtual environment मध्ये प्रवेश करू शकता किंवा बाहेर पडू शकता:
+Virtual environment activate / deactivate करण्यासाठी:
 
 ```
-# Activate the virtual environment
 source .env/bin/activate
-
-# Deactivate the virtual environment
 deactivate
 ```
 
-`which python` command चालवून environment activate झाले आहे का ते तपासू शकता. जर path virtual environment कडे दाखवत असेल, तर environment यशस्वीपणे activate झाले आहे:
+Environment सक्रिय झाले आहे की नाही तपासण्यासाठी:
 
 ```
 which python
 ```
 
-```out
+उदाहरण:
+
+```
 /home/<user>/transformers-course/.env/bin/python
 ```
 
----
+### Dependencies इन्स्टॉल करणे[[installing-dependencies]]
 
-### Installing dependencies[[installing-dependencies]]
-
-Google Colab वापरण्याच्या आधीच्या विभागाप्रमाणे, पुढे जाण्यासाठी आवश्यक packages install करणे आवश्यक आहे. पुन्हा एकदा, `pip` package manager वापरून 🤗 Transformers चे development version install करू शकता:
+आवश्यक packages इन्स्टॉल करण्यासाठी:
 
 ```
 pip install "transformers[sentencepiece]"
 ```
 
-आता तुमचे environment पूर्णपणे तयार झाले आहे आणि तुम्ही पुढे सुरू करू शकता!
-
----
-
-If you want, I can also help you with **a guideline for translating the entire Hugging Face course repo into Marathi (folder structure + terminology rules)** so your translations stay consistent across chapters.
+आता तुमचे setup पूर्ण झाले आहे आणि तुम्ही पुढील अध्यायासाठी तयार आहात!

@@ -1,0 +1,189 @@
+
+# 🤗 Transformers tasks कसे सोडवतात
+
+<Youtube id="zsfR7eY9Uho" />
+
+[Transformers, what can they do?](/course/chapter1/3) या विभागात तुम्ही natural language processing (NLP), speech आणि audio, computer vision tasks आणि त्यांच्या काही महत्त्वाच्या उपयोगांबद्दल शिकलात. या पानावर आपण मॉडेल्स हे tasks कसे सोडवतात आणि आतून काय घडते ते समजून घेऊ.
+
+एखादे task सोडवण्याचे अनेक मार्ग असू शकतात. काही मॉडेल्स विशिष्ट तंत्रांचा वापर करतात किंवा एखाद्या task कडे पूर्णपणे नवीन दृष्टिकोनातून पाहतात. पण Transformer मॉडेल्ससाठी मूलभूत कल्पना साधारणपणे समान असते. त्यांच्या लवचिक architecture मुळे बहुतेक मॉडेल्स encoder, decoder किंवा encoder-decoder या रचनांच्या variant असतात.
+
+> [!TIP]
+> विशिष्ट architecture variants मध्ये जाण्यापूर्वी एक गोष्ट समजून घेणे उपयुक्त आहे: बहुतेक tasks समान पॅटर्न अनुसरतात — input डेटा मॉडेलमधून process केला जातो आणि output विशिष्ट task साठी interpret केला जातो. फरक मुख्यतः डेटा कसा तयार केला जातो, कोणती architecture वापरली जाते आणि output कसा process केला जातो यामध्ये असतो.
+
+Tasks कसे सोडवले जातात हे समजावून सांगण्यासाठी आपण मॉडेलच्या आत काय घडते ते पाहू. खालील मॉडेल्स आणि त्यांच्या संबंधित tasks बद्दल आपण चर्चा करू:
+
+- [Wav2Vec2](https://huggingface.co/docs/transformers/model_doc/wav2vec2) — audio classification आणि automatic speech recognition (ASR)
+- [Vision Transformer (ViT)](https://huggingface.co/docs/transformers/model_doc/vit) आणि [ConvNeXT](https://huggingface.co/docs/transformers/model_doc/convnext) — image classification
+- [DETR](https://huggingface.co/docs/transformers/model_doc/detr) — object detection
+- [Mask2Former](https://huggingface.co/docs/transformers/model_doc/mask2former) — image segmentation
+- [GLPN](https://huggingface.co/docs/transformers/model_doc/glpn) — depth estimation
+- [BERT](https://huggingface.co/docs/transformers/model_doc/bert) — text classification, token classification आणि question answering
+- [GPT2](https://huggingface.co/docs/transformers/model_doc/gpt2) — text generation
+- [BART](https://huggingface.co/docs/transformers/model_doc/bart) — summarization आणि translation
+
+> [!TIP]
+> पुढे जाण्यापूर्वी Transformer architecture ची मूलभूत माहिती असणे उपयुक्त आहे. Encoder, decoder आणि attention कसे काम करतात हे समजल्यास वेगवेगळे Transformer मॉडेल्स कसे काम करतात हे समजणे सोपे जाते. अधिक माहितीसाठी [previous section](https://huggingface.co/course/chapter1/4?fw=pt) पहा.
+
+## भाषा (Language) साठी Transformer मॉडेल्स
+
+Language models हे आधुनिक NLP चे केंद्रबिंदू आहेत. ते मजकुरातील शब्द किंवा tokens मधील सांख्यिकीय पॅटर्न आणि संबंध शिकून मानवी भाषा समजणे आणि तयार करणे शक्य करतात.
+
+Transformer मूळतः machine translation साठी तयार करण्यात आले होते. आज ते जवळपास सर्व AI tasks साठी वापरले जाणारे default architecture बनले आहे.
+
+काही tasks encoder structure साठी अधिक योग्य असतात, काही decoder साठी, तर काहींसाठी encoder-decoder दोन्हींचा वापर केला जातो.
+
+### Language models कसे कार्य करतात
+
+Language models आसपासच्या शब्दांच्या संदर्भावर आधारित एखाद्या शब्दाची probability भाकीत करून काम करतात. यामुळे त्यांना भाषेची मूलभूत समज मिळते जी इतर tasks साठी वापरता येते.
+
+Transformer मॉडेल training साठी दोन मुख्य पद्धती आहेत:
+
+1. **Masked language modeling (MLM)** — BERT सारख्या encoder मॉडेल्समध्ये वापरले जाते. यात input मधील काही tokens random पद्धतीने mask केले जातात आणि मॉडेलला आसपासच्या context च्या आधारावर ते शब्द भाकीत करावे लागतात.
+
+2. **Causal language modeling (CLM)** — GPT सारख्या decoder मॉडेल्समध्ये वापरले जाते. यात मॉडेल sequence मधील पुढील token भाकीत करते आणि त्यासाठी फक्त आधीचे tokens वापरू शकते.
+
+### Language models चे प्रकार
+
+Transformers library मध्ये language models साधारणपणे तीन categories मध्ये विभागले जातात:
+
+1. **Encoder-only models** (उदा. BERT)  
+हे मॉडेल दोन्ही दिशेतील context समजतात आणि classification, named entity recognition, question answering सारख्या tasks साठी योग्य असतात.
+
+2. **Decoder-only models** (उदा. GPT, Llama)  
+हे मॉडेल left-to-right पद्धतीने मजकूर process करतात आणि text generation tasks साठी उत्तम असतात.
+
+3. **Encoder-decoder models** (उदा. T5, BART)  
+हे encoder वापरून input समजतात आणि decoder वापरून output तयार करतात. translation आणि summarization सारख्या tasks साठी हे उपयुक्त आहेत.
+
+![transformer-models-for-language](https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/transformers_architecture.png)
+
+Language models सहसा मोठ्या प्रमाणातील text वर self-supervised पद्धतीने pretrained केले जातात आणि नंतर विशिष्ट tasks साठी fine-tune केले जातात. या पद्धतीला *transfer learning* म्हणतात.
+
+### Text generation
+
+Text generation म्हणजे prompt वर आधारित सुसंगत मजकूर तयार करणे.
+
+[GPT‑2](https://huggingface.co/docs/transformers/model_doc/gpt2) हे decoder-only मॉडेल आहे जे मोठ्या प्रमाणातील text वर pretrained केले गेले आहे.
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/gpt2_architecture.png"/>
+</div>
+
+GPT‑2 मध्ये खालील प्रक्रिया होते:
+
+1. GPT‑2 शब्द tokenize करण्यासाठी byte pair encoding (BPE) वापरते. त्यानंतर positional encoding जोडले जाते.
+
+2. Decoder blocks मधील masked self‑attention layer मुळे मॉडेल भविष्यातील tokens पाहू शकत नाही.
+
+3. Decoder चा output language modeling head मध्ये दिला जातो आणि त्यातून पुढील token ची prediction केली जाते.
+
+GPT‑2 चे training objective म्हणजे पुढील शब्द भाकीत करणे (*causal language modeling*).
+
+### Text classification
+
+Text classification म्हणजे मजकूराला पूर्वनिर्धारित category देणे.
+
+[BERT](https://huggingface.co/docs/transformers/model_doc/bert) हे encoder-only मॉडेल आहे जे bidirectional context समजण्यासाठी तयार केले गेले आहे.
+
+1. BERT WordPiece tokenization वापरते.
+
+2. `[CLS]` token sequence च्या सुरुवातीला जोडला जातो.
+
+3. `[SEP]` token दोन वाक्ये वेगळी करण्यासाठी वापरला जातो.
+
+BERT चे pretraining objectives:
+
+- Masked language modeling
+- Next sentence prediction
+
+Classification साठी `[CLS]` token चा output classification head मध्ये दिला जातो.
+
+### Token classification
+
+Token classification मध्ये sequence मधील प्रत्येक token ला label दिले जाते. उदाहरणार्थ:
+
+- Named entity recognition (NER)
+- Part‑of‑speech tagging
+
+BERT वर token classification head जोडून हा task करता येतो.
+
+### Question answering
+
+Question answering मध्ये दिलेल्या context मधून प्रश्नाचे उत्तर शोधले जाते.
+
+BERT मध्ये span classification head वापरून answer च्या start आणि end positions शोधल्या जातात.
+
+### Summarization
+
+Summarization म्हणजे मोठ्या मजकुराचा लहान सारांश तयार करणे.
+
+[BART](https://huggingface.co/docs/transformers/model_doc/bart) आणि [T5](model_doc/t5) सारखी encoder‑decoder मॉडेल्स या tasks साठी वापरली जातात.
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/bart_architecture.png"/>
+</div>
+
+BART pretraining मध्ये input corrupt करून decoder वापरून मूळ मजकूर पुन्हा तयार केला जातो.
+
+### Translation
+
+Translation म्हणजे एका भाषेतील मजकूर दुसऱ्या भाषेत रूपांतरित करणे.
+
+BART encoder‑decoder architecture वापरून source language ला target language मध्ये convert करते.
+
+## Text पलीकडील modalities
+
+Transformers फक्त text साठीच नाहीत. ते speech, audio, images आणि video साठी देखील वापरले जाऊ शकतात.
+
+### Speech आणि audio
+
+[Whisper](https://huggingface.co/docs/transformers/main/en/model_doc/whisper) हे encoder‑decoder मॉडेल आहे जे 680,000 तासांच्या audio डेटावर pretrained आहे.
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/whisper_architecture.png"/>
+</div>
+
+Whisper चे दोन मुख्य भाग आहेत:
+
+1. **Encoder** — audio ला log‑Mel spectrogram मध्ये बदलून process करतो.
+2. **Decoder** — text tokens तयार करतो.
+
+### Automatic speech recognition
+
+Speech recognition साठी Whisper चा encoder‑decoder वापरला जातो.
+
+```python
+from transformers import pipeline
+
+transcriber = pipeline(
+    task="automatic-speech-recognition", model="openai/whisper-base.en"
+)
+transcriber("https://huggingface.co/datasets/Narsil/asr_dummy/resolve/main/mlk.flac")
+```
+
+### Computer vision
+
+Computer vision tasks साठी दोन मुख्य पद्धती आहेत:
+
+1. Image patches मध्ये विभागून Transformer वापरणे
+2. आधुनिक CNN architecture वापरणे (उदा. ConvNeXT)
+
+### Image classification
+
+ViT आणि ConvNeXT दोन्ही image classification साठी वापरले जाऊ शकतात.
+
+[ViT](https://huggingface.co/docs/transformers/model_doc/vit) पूर्णपणे Transformer architecture वापरते.
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformers/model_doc/vit_architecture.jpg"/>
+</div>
+
+ViT मध्ये:
+
+1. Image patches मध्ये विभागले जाते.
+2. `[CLS]` token जोडला जातो.
+3. Positional embeddings जोडले जातात.
+4. Transformer encoder मध्ये process केले जाते.
+
+> [!TIP]
+> ViT आणि BERT मध्ये काही समानता आहेत — दोन्ही `[CLS]` token वापरतात, positional embeddings जोडतात आणि Transformer encoder वापरतात.

@@ -1,0 +1,77 @@
+
+# सारांश[[summary]]
+
+<CourseFloatingBanner
+    chapter={1}
+    classNames="absolute z-10 right-0 top-0"
+/>
+
+या अध्यायात तुम्हाला Transformer मॉडेल्स, Large Language Models (LLMs) आणि त्यांनी AI क्षेत्रात केलेल्या क्रांतीबद्दल मूलभूत माहिती मिळाली.
+
+## मुख्य संकल्पना
+
+### Natural Language Processing आणि LLMs
+
+आपण NLP म्हणजे काय आणि Large Language Models ने या क्षेत्रात कसा बदल घडवून आणला हे पाहिले. तुम्ही खालील गोष्टी शिकलात:
+
+- NLP मध्ये classification पासून text generation पर्यंत अनेक प्रकारचे tasks समाविष्ट असतात
+- LLMs हे प्रचंड प्रमाणातील text डेटा वापरून प्रशिक्षित केलेले शक्तिशाली मॉडेल्स असतात
+- एकाच architecture मध्ये अनेक tasks हाताळण्याची क्षमता या मॉडेल्समध्ये असते
+- त्यांच्या क्षमतेनंतरही LLMs मध्ये hallucinations आणि bias सारख्या मर्यादा असतात
+
+### Transformer क्षमता
+
+तुम्ही पाहिले की 🤗 Transformers मधील `pipeline()` function वापरून pretrained मॉडेल्स विविध tasks साठी सहज वापरता येतात:
+
+- Text classification, token classification आणि question answering
+- Text generation आणि summarization
+- Translation आणि इतर sequence-to-sequence tasks
+- Speech recognition आणि image classification
+
+### Transformer architecture
+
+आपण Transformer मॉडेल्स उच्च स्तरावर कसे काम करतात ते पाहिले, ज्यात खालील गोष्टींचा समावेश आहे:
+
+- Attention mechanism चे महत्त्व
+- Transfer learning मुळे मॉडेल्स विशिष्ट tasks साठी कसे adapt होतात
+- तीन प्रमुख architecture प्रकार: encoder-only, decoder-only आणि encoder-decoder
+
+### Model architectures आणि त्यांचे उपयोग
+
+या अध्यायातील एक महत्त्वाचा भाग म्हणजे कोणत्या task साठी कोणती architecture वापरावी हे समजणे:
+
+| Model           | Examples                                   | Tasks                                                                            |
+|-----------------|--------------------------------------------|----------------------------------------------------------------------------------|
+| Encoder-only    | BERT, DistilBERT, ModernBERT               | Sentence classification, named entity recognition, extractive question answering |
+| Decoder-only    | GPT, LLaMA, Gemma, SmolLM                  | Text generation, conversational AI, creative writing                             |
+| Encoder-decoder | BART, T5, Marian, mBART                    | Summarization, translation, generative question answering                        |
+
+### आधुनिक LLM विकास
+
+या क्षेत्रातील काही अलीकडील प्रगतीबद्दलही तुम्ही शिकलात:
+
+- LLMs चा आकार आणि क्षमता कालांतराने कशी वाढली
+- Scaling laws ची संकल्पना आणि ती मॉडेल विकासात कशी मदत करते
+- लांब sequences process करण्यासाठी वापरले जाणारे विशेष attention mechanisms
+- Pretraining आणि instruction tuning या दोन टप्प्यांतील training पद्धत
+
+### व्यावहारिक उपयोग
+
+या अध्यायात तुम्ही पाहिले की ही मॉडेल्स वास्तविक जगातील समस्यांवर कशी वापरली जाऊ शकतात:
+
+- Hugging Face Hub वापरून pretrained मॉडेल्स शोधणे आणि वापरणे
+- Inference API वापरून browser मधून मॉडेल्स तपासणे
+- विशिष्ट tasks साठी योग्य मॉडेल कसे निवडावे हे समजणे
+
+## पुढे काय?
+
+आता तुम्हाला Transformer मॉडेल्स म्हणजे काय आणि ते उच्च स्तरावर कसे कार्य करतात याची चांगली समज मिळाली आहे. पुढील अध्यायांमध्ये तुम्ही अधिक सखोल पद्धतीने त्यांचा वापर शिकाल.
+
+पुढील विभागांमध्ये तुम्ही शिकाल:
+
+- Transformers library वापरून मॉडेल्स load आणि fine-tune कसे करायचे
+- मॉडेल input साठी विविध प्रकारचा डेटा कसा process करायचा
+- Pretrained मॉडेल्स तुमच्या विशिष्ट tasks साठी कसे adapt करायचे
+- वास्तविक applications साठी मॉडेल्स deploy कसे करायचे
+
+या अध्यायात तयार केलेला पाया पुढील प्रगत संकल्पना आणि तंत्रे समजून घेण्यासाठी अत्यंत उपयुक्त ठरेल.

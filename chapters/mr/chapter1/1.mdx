@@ -1,0 +1,95 @@
+
+# परिचय[[introduction]]
+
+<CourseFloatingBanner
+    chapter={1}
+    classNames="absolute z-10 right-0 top-0"
+/>
+
+## 🤗 कोर्समध्ये स्वागत आहे![[welcome-to-the-course]]
+
+<Youtube id="00GKzGyWFEs" />
+
+या कोर्समध्ये तुम्ही Large Language Models (LLMs) आणि Natural Language Processing (NLP) बद्दल शिकाल. यासाठी [Hugging Face](https://huggingface.co/) ecosystem मधील लायब्ररी वापरल्या जातील — [🤗 Transformers](https://github.com/huggingface/transformers), [🤗 Datasets](https://github.com/huggingface/datasets), [🤗 Tokenizers](https://github.com/huggingface/tokenizers), आणि [🤗 Accelerate](https://github.com/huggingface/accelerate) — तसेच [Hugging Face Hub](https://huggingface.co/models).
+
+आपण Hugging Face ecosystem च्या बाहेरील काही लायब्ररींचाही अभ्यास करू. या AI समुदायासाठी अत्यंत महत्त्वपूर्ण योगदान आहेत आणि अत्यंत उपयुक्त साधने आहेत.
+
+हा कोर्स पूर्णपणे मोफत आहे आणि यात कोणत्याही जाहिराती नाहीत.
+
+## NLP आणि LLM समजून घेणे[[understanding-nlp-and-llms]]
+
+हा कोर्स सुरुवातीला NLP (Natural Language Processing) वर केंद्रित होता, परंतु आता तो Large Language Models (LLMs) वर अधिक भर देतो, कारण हे या क्षेत्रातील अलीकडील महत्त्वाचे प्रगतीचे उदाहरण आहे.
+
+**यातील फरक काय आहे?**
+
+- **NLP (Natural Language Processing)** हे विस्तृत क्षेत्र आहे जे संगणकांना मानवी भाषा समजणे, विश्लेषण करणे आणि निर्माण करणे शक्य करते. NLP मध्ये sentiment analysis, named entity recognition आणि machine translation यांसारखी अनेक तंत्रे आणि कार्यांचा समावेश असतो.
+- **LLMs (Large Language Models)** हे NLP मॉडेल्सचा शक्तिशाली उपसमूह आहेत. त्यांची वैशिष्ट्ये म्हणजे मोठ्या प्रमाणातील मॉडेल आकार, विस्तृत प्रशिक्षण डेटा आणि कमी task-specific प्रशिक्षणासह अनेक भाषिक कार्ये करण्याची क्षमता. Llama, GPT किंवा Claude सारखी मॉडेल्स ही LLM ची उदाहरणे आहेत ज्यांनी NLP क्षेत्रात मोठा बदल घडवला आहे.
+
+या कोर्सदरम्यान तुम्ही पारंपरिक NLP संकल्पना तसेच आधुनिक LLM तंत्रज्ञान शिकाल, कारण NLP ची मूलभूत समज LLM सोबत प्रभावीपणे काम करण्यासाठी अत्यंत आवश्यक आहे.
+
+## काय अपेक्षित आहे?[[what-to-expect]]
+
+खाली कोर्सचा संक्षिप्त आढावा दिला आहे:
+
+<div class="flex justify-center">
+<img class="block dark:hidden" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/summary.svg" alt="Brief overview of the chapters of the course.">
+<img class="hidden dark:block" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/summary-dark.svg" alt="Brief overview of the chapters of the course.">
+</div>
+
+- अध्याय 1 ते 4 मध्ये 🤗 Transformers लायब्ररीच्या मुख्य संकल्पनांची ओळख दिली आहे. या भागाच्या शेवटी तुम्हाला Transformer मॉडेल्स कसे कार्य करतात हे समजेल आणि [Hugging Face Hub](https://huggingface.co/models) वरून मॉडेल वापरणे, dataset वर fine‑tune करणे आणि तुमचे परिणाम Hub वर शेअर करणे शक्य होईल.
+- अध्याय 5 ते 8 मध्ये 🤗 Datasets आणि 🤗 Tokenizers ची मूलभूत माहिती दिली जाते आणि त्यानंतर पारंपरिक NLP tasks आणि LLM तंत्रज्ञानावर चर्चा केली जाते. या भागाच्या शेवटी तुम्ही सर्वसाधारण भाषा प्रक्रिया समस्यांना स्वतः हाताळू शकाल.
+- अध्याय 9 मध्ये NLP च्या पलीकडे जाऊन 🤗 Hub वर मॉडेल डेमो कसे तयार करायचे आणि शेअर करायचे हे शिकवले जाते.
+- अध्याय 10 ते 12 मध्ये advanced LLM विषयांवर चर्चा होते जसे fine‑tuning, उच्च दर्जाचे datasets तयार करणे आणि reasoning models विकसित करणे.
+
+हा कोर्स:
+
+* Python चे चांगले ज्ञान अपेक्षित आहे
+* deep learning चा परिचय असलेला कोर्स पूर्ण केल्यानंतर करणे अधिक योग्य आहे, जसे [fast.ai](https://www.fast.ai/) चा [Practical Deep Learning for Coders](https://course.fast.ai/) किंवा [DeepLearning.AI](https://www.deeplearning.ai/) चे कार्यक्रम
+* [PyTorch](https://pytorch.org/) किंवा [TensorFlow](https://www.tensorflow.org/) चे पूर्वज्ञान आवश्यक नाही, परंतु त्यांची थोडी ओळख असल्यास उपयोग होईल
+
+हा कोर्स पूर्ण झाल्यानंतर आम्ही DeepLearning.AI च्या [Natural Language Processing Specialization](https://www.coursera.org/specializations/natural-language-processing?utm_source=deeplearning-ai&utm_medium=institutions&utm_campaign=20211011-nlp-2-hugging_face-page-nlp-refresh) कोर्सची शिफारस करतो, ज्यामध्ये naive Bayes आणि LSTMs सारख्या पारंपरिक NLP मॉडेल्सचा समावेश आहे.
+
+## आम्ही कोण आहोत?[[who-are-we]]
+
+लेखकांविषयी:
+
+[**Abubakar Abid**](https://huggingface.co/abidlabs) यांनी Stanford विद्यापीठातून applied machine learning मध्ये PhD पूर्ण केली आहे. त्यांच्या PhD दरम्यान त्यांनी [Gradio](https://github.com/gradio-app/gradio) ही open‑source Python लायब्ररी तयार केली, ज्याचा वापर 600,000 पेक्षा अधिक machine learning demos तयार करण्यासाठी झाला आहे.
+
+[**Ben Burtenshaw**](https://huggingface.co/burtenshaw) हे Hugging Face येथे Machine Learning Engineer आहेत. त्यांनी University of Antwerp मधून Natural Language Processing मध्ये PhD पूर्ण केली.
+
+[**Matthew Carrigan**](https://huggingface.co/Rocketknight1) हे Hugging Face येथे Machine Learning Engineer आहेत. ते Dublin, Ireland येथे राहतात.
+
+[**Lysandre Debut**](https://huggingface.co/lysandre) हे Hugging Face येथे Machine Learning Engineer आहेत आणि 🤗 Transformers लायब्ररीच्या सुरुवातीपासून विकासात सहभागी आहेत.
+
+[**Sylvain Gugger**](https://huggingface.co/sgugger) हे Hugging Face येथे Research Engineer आहेत आणि 🤗 Transformers लायब्ररीचे मुख्य maintainers पैकी एक आहेत.
+
+[**Dawood Khan**](https://huggingface.co/dawoodkhan82) हे Hugging Face येथे Machine Learning Engineer आहेत आणि Gradio चे सहसंस्थापक आहेत.
+
+[**Merve Noyan**](https://huggingface.co/merve) या Hugging Face येथे developer advocate आहेत आणि machine learning सर्वांसाठी उपलब्ध करण्यासाठी काम करतात.
+
+[**Lucile Saulnier**](https://huggingface.co/SaulLu) या Hugging Face येथे machine learning engineer आहेत.
+
+[**Lewis Tunstall**](https://huggingface.co/lewtun) हे Hugging Face येथे machine learning engineer आहेत आणि open‑source tools विकसित करण्यावर लक्ष केंद्रित करतात.
+
+[**Leandro von Werra**](https://huggingface.co/lvwerra) हे Hugging Face open‑source टीममधील machine learning engineer आहेत.
+
+## FAQ[[faq]]
+
+वारंवार विचारले जाणारे काही प्रश्न:
+
+- **हा कोर्स पूर्ण केल्यावर प्रमाणपत्र मिळते का?**
+सध्या या कोर्ससाठी प्रमाणपत्र उपलब्ध नाही, परंतु Hugging Face ecosystem साठी प्रमाणपत्र कार्यक्रमावर काम सुरू आहे.
+
+- **या कोर्ससाठी किती वेळ द्यावा लागेल?**
+प्रत्येक अध्याय साधारणतः 1 आठवड्यात पूर्ण करण्यासाठी डिझाइन केला आहे, दर आठवड्याला सुमारे 6‑8 तास अभ्यास अपेक्षित आहे.
+
+- **माझा प्रश्न कुठे विचारू शकतो?**
+कोर्समधील कोणत्याही विभागाबद्दल प्रश्न असल्यास, पृष्ठाच्या वरच्या भागातील "*Ask a question*" बटण वापरून [Hugging Face forums](https://discuss.huggingface.co/) वर जा.
+
+## चला सुरुवात करूया 🚀
+
+या अध्यायात तुम्ही शिकाल:
+
+* `pipeline()` फंक्शन वापरून text generation आणि classification सारखी NLP tasks कशी सोडवायची
+* Transformer architecture बद्दल
+* encoder, decoder आणि encoder‑decoder architectures मधील फरक आणि त्यांचे उपयोग

@@ -2,3 +2,29 @@
   sections:
   - local: chapter0/1
     title: परिचय
+
+- title: 1. ट्रान्सफॉर्मर मॉडेल्स
+  sections:
+  - local: chapter1/1
+    title: परिचय
+  - local: chapter1/2
+    title: नैसर्गिक भाषा प्रक्रिया आणि मोठी भाषा मॉडेल्स
+  - local: chapter1/3
+    title: ट्रान्सफॉर्मर्स काय करू शकतात?
+  - local: chapter1/4
+    title: ट्रान्सफॉर्मर्स कसे कार्य करतात?
+  - local: chapter1/5
+    title: 🤗 ट्रान्सफॉर्मर्स tasks कसे सोडवतात
+  - local: chapter1/6
+    title: ट्रान्सफॉर्मर आर्किटेक्चर
+  - local: chapter1/7
+    title: झटपट क्विझ
+  - local: chapter1/8
+    title: LLMs सह इन्फरन्स
+  - local: chapter1/9
+    title: पक्षपात आणि मर्यादा
+  - local: chapter1/10
+    title: सारांश
+  - local: chapter1/11
+    title: प्रमाणपत्र परीक्षा
+    quiz: 1

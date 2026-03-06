@@ -1,0 +1,50 @@
+
+# Bias आणि मर्यादा[[bias-and-limitations]]
+
+<CourseFloatingBanner chapter={1}
+  classNames="absolute z-10 right-0 top-0"
+  notebooks={[
+    {label: "Google Colab", value: "https://colab.research.google.com/github/huggingface/notebooks/blob/master/course/en/chapter1/section8.ipynb"},
+    {label: "Aws Studio", value: "https://studiolab.sagemaker.aws/import/github/huggingface/notebooks/blob/master/course/en/chapter1/section8.ipynb"},
+]} />
+
+जर तुमचा उद्देश pretrained मॉडेल किंवा त्याचे fine-tuned version production मध्ये वापरण्याचा असेल, तर हे लक्षात ठेवणे महत्त्वाचे आहे की ही मॉडेल्स अत्यंत शक्तिशाली असली तरी त्यांना काही मर्यादा आहेत. त्यातील सर्वात मोठी मर्यादा म्हणजे pretraining साठी मोठ्या प्रमाणावर डेटा वापरण्याची गरज.
+
+अनेक वेळा संशोधक इंटरनेटवर उपलब्ध असलेला मोठ्या प्रमाणातील मजकूर **scrape** करतात. त्यामुळे त्यात इंटरनेटवरील चांगली माहिती तसेच चुकीची किंवा पक्षपाती माहिती दोन्ही समाविष्ट होतात.
+
+हे समजण्यासाठी आपण पुन्हा BERT मॉडेलसह `fill-mask` pipeline चे उदाहरण पाहू:
+
+```python
+from transformers import pipeline
+
+unmasker = pipeline("fill-mask", model="bert-base-uncased")
+result = unmasker("This man works as a [MASK].")
+print([r["token_str"] for r in result])
+
+result = unmasker("This woman works as a [MASK].")
+print([r["token_str"] for r in result])
+```
+
+```python out
+['lawyer', 'carpenter', 'doctor', 'waiter', 'mechanic']
+['nurse', 'waitress', 'teacher', 'maid', 'prostitute']
+```
+
+या दोन वाक्यांमध्ये missing शब्द भरायला सांगितल्यावर मॉडेल जवळजवळ **gender-neutral** उत्तर देत नाही. `waiter/waitress` वगळता इतर बहुतेक उत्तरांमध्ये विशिष्ट gender शी संबंधित व्यवसाय दिसतात.
+
+उदाहरणार्थ:
+- "man" साठी: lawyer, carpenter, doctor, mechanic
+- "woman" साठी: nurse, waitress, maid
+
+यापेक्षा अधिक चिंताजनक गोष्ट म्हणजे "woman" या शब्दासोबत मॉडेलने **prostitute** हा पर्याय देखील top 5 मध्ये दिला.
+
+हे विशेष लक्षात घेण्यासारखे आहे कारण BERT हे इंटरनेटवरील सर्व डेटा scrape करून तयार केलेले मॉडेल नाही. ते तुलनेने neutral मानल्या जाणाऱ्या datasets वर प्रशिक्षित केले गेले आहे:
+
+- [English Wikipedia](https://huggingface.co/datasets/wikipedia)
+- [BookCorpus](https://huggingface.co/datasets/bookcorpus)
+
+तरीही अशा प्रकारचे bias दिसून येतात.
+
+म्हणून जेव्हा तुम्ही ही साधने वापरता, तेव्हा हे लक्षात ठेवणे आवश्यक आहे की वापरलेले मॉडेल **sexist, racist किंवा homophobic content** तयार करू शकते.
+
+तुम्ही मॉडेलला तुमच्या डेटावर fine-tune केले तरीही हा मूळ bias पूर्णपणे नाहीसा होईलच असे नाही.

@@ -1,0 +1,172 @@
+
+# Transformers कसे कार्य करतात?[[how-do-transformers-work]]
+
+<CourseFloatingBanner
+    chapter={1}
+    classNames="absolute z-10 right-0 top-0"
+/>
+
+या विभागात आपण Transformer मॉडेल्सची architecture पाहणार आहोत आणि attention, encoder-decoder architecture यांसारख्या संकल्पनांमध्ये अधिक सखोल जाऊ.
+
+> [!WARNING]
+> 🚀 येथे आपण थोडे अधिक तांत्रिक विषय पाहणार आहोत. हा विभाग तपशीलवार आहे, त्यामुळे सुरुवातीला सर्व काही समजले नाही तरी काळजी करू नका. कोर्समध्ये पुढे आपण या संकल्पनांकडे पुन्हा येऊ.
+
+## Transformer चा थोडक्यात इतिहास[[a-bit-of-transformer-history]]
+
+Transformer मॉडेल्सच्या (लहान) इतिहासातील काही महत्त्वाचे टप्पे खाली दिले आहेत:
+
+<div class="flex justify-center">
+<img class="block dark:hidden" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/transformers_chrono.svg" alt="A brief chronology of Transformers models.">
+<img class="hidden dark:block" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/transformers_chrono-dark.svg" alt="A brief chronology of Transformers models.">
+</div>
+
+[Transformer architecture](https://arxiv.org/abs/1706.03762) जून 2017 मध्ये सादर करण्यात आली. मूळ संशोधनाचा मुख्य उद्देश translation tasks होता.
+
+यानंतर काही महत्त्वाच्या मॉडेल्सची ओळख झाली:
+
+- **June 2018**: [GPT](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf) — पहिला pretrained Transformer मॉडेल, जो विविध NLP tasks साठी fine-tuning करून वापरला गेला.
+- **October 2018**: [BERT](https://arxiv.org/abs/1810.04805) — वाक्यांचे अधिक चांगले प्रतिनिधित्व तयार करण्यासाठी डिझाइन केलेले pretrained मॉडेल.
+- **February 2019**: [GPT-2](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf) — GPT ची अधिक मोठी आणि सुधारित आवृत्ती.
+- **October 2019**: [T5](https://huggingface.co/papers/1910.10683) — sequence-to-sequence Transformer architecture वर आधारित multi-task मॉडेल.
+- **May 2020**: [GPT-3](https://huggingface.co/papers/2005.14165) — GPT-2 पेक्षा मोठे मॉडेल जे fine-tuning शिवाय अनेक tasks करू शकते (zero-shot learning).
+- **January 2022**: [InstructGPT](https://huggingface.co/papers/2203.02155) — GPT-3 चे instruction-following सुधारित मॉडेल.
+- **January 2023**: [Llama](https://huggingface.co/papers/2302.13971) — अनेक भाषांमध्ये मजकूर तयार करू शकणारे मोठे भाषा मॉडेल.
+- **March 2023**: [Mistral](https://huggingface.co/papers/2310.06825) — 7B parameters असलेले शक्तिशाली मॉडेल.
+- **May 2024**: [Gemma 2](https://huggingface.co/papers/2408.00118) — हलके आणि कार्यक्षम open models (2B–27B parameters).
+- **November 2024**: [SmolLM2](https://huggingface.co/papers/2502.02737) — लहान पण प्रभावी भाषा मॉडेल (135M–1.7B parameters).
+
+ही यादी पूर्ण नाही, परंतु Transformer मॉडेल्सच्या विविध प्रकारांची कल्पना देते.
+
+मोठ्या प्रमाणावर त्यांना तीन गटात विभागले जाते:
+
+- GPT सारखी मॉडेल्स (*auto-regressive* Transformers)
+- BERT सारखी मॉडेल्स (*auto-encoding* Transformers)
+- T5 सारखी मॉडेल्स (*sequence-to-sequence* Transformers)
+
+## Transformers हे language models आहेत[[transformers-are-language-models]]
+
+GPT, BERT, T5 यांसारखी सर्व Transformer मॉडेल्स *language models* म्हणून प्रशिक्षित केलेली आहेत.
+
+याचा अर्थ असा की ती मोठ्या प्रमाणातील raw text वर *self-supervised learning* वापरून प्रशिक्षित केली जातात.
+
+Self-supervised learning मध्ये training objective मॉडेलच्या input मधूनच तयार केला जातो, त्यामुळे डेटाला मानवाने label करण्याची गरज नसते.
+
+अशा प्रकारे मॉडेलला भाषेचे सांख्यिकीय आकलन मिळते. परंतु विशिष्ट practical tasks साठी ते थेट उपयुक्त नसते.
+
+म्हणून pretrained मॉडेलवर पुढे *transfer learning* किंवा *fine-tuning* प्रक्रिया केली जाते. या प्रक्रियेत मानवी annotated labels वापरून विशिष्ट task साठी मॉडेल प्रशिक्षित केले जाते.
+
+उदाहरणार्थ, वाक्यातील पुढील शब्द भाकीत करणे. याला *causal language modeling* म्हणतात.
+
+<div class="flex justify-center">
+<img class="block dark:hidden" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/causal_modeling.svg" alt="Example of causal language modeling.">
+<img class="hidden dark:block" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/causal_modeling-dark.svg" alt="Example of causal language modeling.">
+</div>
+
+दुसरे उदाहरण म्हणजे *masked language modeling* ज्यात मॉडेल वाक्यातील masked शब्द भाकीत करते.
+
+<div class="flex justify-center">
+<img class="block dark:hidden" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/masked_modeling.svg" alt="Example of masked language modeling.">
+<img class="hidden dark:block" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/masked_modeling-dark.svg" alt="Example of masked language modeling.">
+</div>
+
+## Transformers मोठी मॉडेल्स असतात[[transformers-are-big-models]]
+
+सामान्यतः चांगली कामगिरी मिळवण्यासाठी मॉडेलचा आकार आणि training डेटा वाढवला जातो.
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/model_parameters.png" alt="Number of parameters of recent Transformers models" width="90%">
+</div>
+
+मोठे मॉडेल प्रशिक्षित करण्यासाठी प्रचंड डेटा आणि संगणकीय संसाधने लागतात. याचा पर्यावरणावर देखील परिणाम होऊ शकतो.
+
+<div class="flex justify-center">
+<img class="block dark:hidden" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/carbon_footprint.svg" alt="The carbon footprint of a large language model.">
+<img class="hidden dark:block" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/carbon_footprint-dark.svg" alt="The carbon footprint of a large language model.">
+</div>
+
+<Youtube id="ftWlj4FBHTg"/>
+
+यामुळे pretrained मॉडेल्स शेअर करणे अत्यंत महत्त्वाचे आहे. आधीच प्रशिक्षित weights वापरल्याने computational cost आणि carbon footprint दोन्ही कमी होतात.
+
+## Transfer Learning[[transfer-learning]]
+
+<Youtube id="BqqfQnyjmgg" />
+
+*Pretraining* म्हणजे मॉडेलला सुरुवातीपासून प्रशिक्षण देणे — weights random असतात आणि मॉडेलला पूर्वज्ञान नसते.
+
+<div class="flex justify-center">
+<img class="block dark:hidden" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/pretraining.svg" alt="Pretraining a model">
+<img class="hidden dark:block" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/pretraining-dark.svg" alt="Pretraining a model">
+</div>
+
+Pretraining साठी मोठ्या प्रमाणात डेटा लागतो आणि training ला अनेक आठवडे लागू शकतात.
+
+*Fine-tuning* म्हणजे pretrained मॉडेलला विशिष्ट task साठी पुन्हा प्रशिक्षण देणे.
+
+Fine-tuning चे फायदे:
+
+* कमी डेटा आवश्यक
+* कमी वेळ आणि संसाधने लागतात
+* चांगले परिणाम मिळतात
+
+उदाहरणार्थ, इंग्रजी भाषेवर pretrained मॉडेल घेऊन ते वैज्ञानिक लेखांवर fine-tune केल्यास science domain साठी विशेष मॉडेल तयार होऊ शकते.
+
+<div class="flex justify-center">
+<img class="block dark:hidden" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/finetuning.svg" alt="Fine tuning a model">
+<img class="hidden dark:block" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/finetuning-dark.svg" alt="Fine tuning a model">
+</div>
+
+## General Transformer architecture[[general-transformer-architecture]]
+
+<Youtube id="H39Z_720T5s" />
+
+Transformer मॉडेल प्रामुख्याने दोन भागांनी बनलेले असते:
+
+* **Encoder** — इनपुटचे प्रतिनिधित्व तयार करतो
+* **Decoder** — encoder च्या output वर आधारित output sequence तयार करतो
+
+<div class="flex justify-center">
+<img class="block dark:hidden" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/transformers_blocks.svg" alt="Transformer architecture">
+<img class="hidden dark:block" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/transformers_blocks-dark.svg" alt="Transformer architecture">
+</div>
+
+वेगवेगळ्या tasks साठी वेगवेगळे architecture वापरले जातात:
+
+* **Encoder-only models** — sentence classification, NER
+* **Decoder-only models** — text generation
+* **Encoder-decoder models** — translation, summarization
+
+## Attention layers[[attention-layers]]
+
+Transformer मॉडेल्समध्ये *attention layers* हा एक महत्त्वाचा भाग आहे.
+
+Attention layer मॉडेलला वाक्यातील कोणत्या शब्दांवर अधिक लक्ष द्यायचे हे ठरवण्यास मदत करते.
+
+उदाहरणार्थ, इंग्रजी ते फ्रेंच translation करताना "You like this course" या वाक्यात "like" या शब्दाचा योग्य अनुवाद करण्यासाठी "You" या शब्दावर लक्ष द्यावे लागते.
+
+यामुळे मॉडेलला context समजतो आणि योग्य output तयार करता येतो.
+
+## Original Transformer architecture[[the-original-architecture]]
+
+मूळ Transformer architecture translation साठी डिझाइन केलेली होती.
+
+Encoder input वाक्य प्रक्रिया करतो, तर decoder target language मधील वाक्य तयार करतो.
+
+<div class="flex justify-center">
+<img class="block dark:hidden" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/transformers.svg" alt="Original transformer architecture">
+<img class="hidden dark:block" src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/transformers-dark.svg" alt="Original transformer architecture">
+</div>
+
+Decoder sequential पद्धतीने काम करतो आणि फक्त आधी तयार झालेल्या शब्दांकडे लक्ष देऊ शकतो.
+
+## Architectures vs Checkpoints[[architecture-vs-checkpoints]]
+
+Transformer मॉडेल्समध्ये काही महत्त्वाचे शब्द वापरले जातात:
+
+* **Architecture** — मॉडेलची रचना (layers आणि operations)
+* **Checkpoint** — त्या architecture साठी trained weights
+* **Model** — architecture किंवा checkpoint दोन्हींसाठी वापरला जाणारा सामान्य शब्द
+
+उदाहरण:
+
+BERT हे architecture आहे, तर `bert-base-cased` हा त्या architecture साठीचा checkpoint आहे.

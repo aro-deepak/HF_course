@@ -1,0 +1,250 @@
+
+# Transformers, ते काय करू शकतात?[[transformers-what-can-they-do]]
+
+<CourseFloatingBanner chapter={1}
+  classNames="absolute z-10 right-0 top-0"
+  notebooks={[
+    {label: "Google Colab", value: "https://colab.research.google.com/github/huggingface/notebooks/blob/master/course/en/chapter1/section3.ipynb"},
+    {label: "Aws Studio", value: "https://studiolab.sagemaker.aws/import/github/huggingface/notebooks/blob/master/course/en/chapter1/section3.ipynb"},
+]} />
+
+या विभागात आपण Transformer मॉडेल्स काय करू शकतात हे पाहणार आहोत आणि 🤗 Transformers लायब्ररीतील आपले पहिले साधन वापरणार आहोत: `pipeline()` फंक्शन.
+
+> [!TIP]
+> 👀 वर उजव्या बाजूला दिसणारे <em>Open in Colab</em> बटण पाहिले का? त्यावर क्लिक करून तुम्ही या विभागातील सर्व कोड उदाहरणांसह Google Colab notebook उघडू शकता. कोड उदाहरणे असलेल्या प्रत्येक विभागात हे बटण उपलब्ध असेल.
+>
+> जर तुम्हाला उदाहरणे स्थानिक संगणकावर चालवायची असतील, तर <a href="/course/chapter0">setup</a> विभाग पाहण्याची शिफारस करतो.
+
+## Transformers सर्वत्र आहेत![[transformers-are-everywhere]]
+
+Transformer मॉडेल्सचा वापर अनेक प्रकारच्या tasks साठी केला जातो, जसे natural language processing (NLP), computer vision, audio processing आणि इतर अनेक क्षेत्रे. खाली काही कंपन्या आणि संस्थांची उदाहरणे दिली आहेत ज्या Hugging Face आणि Transformer मॉडेल्स वापरतात आणि समुदायासाठी त्यांची मॉडेल्स शेअर करतात:
+
+<img src="https://huggingface.co/datasets/huggingface-course/documentation-images/resolve/main/en/chapter1/companies.PNG" alt="Companies using Hugging Face" width="100%">
+
+[🤗 Transformers library](https://github.com/huggingface/transformers) या शेअर केलेल्या मॉडेल्स तयार करण्यासाठी आणि वापरण्यासाठी आवश्यक साधने उपलब्ध करून देते. [Model Hub](https://huggingface.co/models) मध्ये लाखो pretrained मॉडेल्स आहेत जे कोणीही डाउनलोड करून वापरू शकतो. तुम्ही तुमची स्वतःची मॉडेल्स देखील Hub वर अपलोड करू शकता!
+
+> [!TIP]
+> ⚠️ Hugging Face Hub फक्त Transformer मॉडेल्सपुरता मर्यादित नाही. कोणीही कोणत्याही प्रकारचे मॉडेल किंवा dataset येथे शेअर करू शकतो! सर्व वैशिष्ट्यांचा लाभ घेण्यासाठी <a href="https://huggingface.co/join">huggingface.co</a> खाते तयार करा.
+
+Transformer मॉडेल्स आतून कसे कार्य करतात यामध्ये जाण्यापूर्वी, काही उदाहरणे पाहू या ज्यामध्ये ते NLP समस्या सोडवण्यासाठी कसे वापरले जातात.
+
+## Pipelines सोबत काम करणे[[working-with-pipelines]]
+
+<Youtube id="tiZFewofSLM" />
+
+🤗 Transformers लायब्ररीतील सर्वात मूलभूत घटक म्हणजे `pipeline()` फंक्शन. हे मॉडेलला आवश्यक preprocessing आणि postprocessing चरणांशी जोडते, ज्यामुळे आपण थेट मजकूर इनपुट देऊन समजण्यासारखे उत्तर मिळवू शकतो:
+
+```python
+from transformers import pipeline
+
+classifier = pipeline("sentiment-analysis")
+classifier("I've been waiting for a HuggingFace course my whole life.")
+```
+
+```python out
+[{'label': 'POSITIVE', 'score': 0.9598047137260437}]
+```
+
+आपण अनेक वाक्ये देखील देऊ शकतो:
+
+```python
+classifier(
+    ["I've been waiting for a HuggingFace course my whole life.", "I hate this so much!"]
+)
+```
+
+```python out
+[{'label': 'POSITIVE', 'score': 0.9598047137260437},
+ {'label': 'NEGATIVE', 'score': 0.9994558095932007}]
+```
+
+डिफॉल्टनुसार, ही pipeline sentiment analysis साठी fine‑tuned केलेले pretrained मॉडेल निवडते. जेव्हा तुम्ही `classifier` ऑब्जेक्ट तयार करता तेव्हा मॉडेल डाउनलोड होऊन cache मध्ये साठवले जाते. पुढच्या वेळी कमांड चालवल्यास cached मॉडेल वापरले जाईल.
+
+Pipeline मध्ये मजकूर दिल्यावर तीन मुख्य टप्पे होतात:
+
+1. मजकूर मॉडेलला समजेल अशा स्वरूपात preprocess केला जातो.
+2. preprocess केलेला इनपुट मॉडेलला दिला जातो.
+3. मॉडेलचे predictions postprocess करून समजण्यास सोपे केले जातात.
+
+## वेगवेगळ्या modalities साठी उपलब्ध pipelines
+
+`pipeline()` फंक्शन अनेक modalities ला सपोर्ट करते — जसे text, images, audio आणि multimodal tasks. या कोर्समध्ये आपण मुख्यतः text tasks वर लक्ष केंद्रित करू, परंतु Transformer architecture ची क्षमता समजण्यासाठी थोडक्यात आढावा घेऊ.
+
+> [!TIP]
+> सर्व pipelines ची संपूर्ण यादी पाहण्यासाठी [🤗 Transformers documentation](https://huggingface.co/docs/hub/en/models-tasks) पहा.
+
+### Text pipelines
+
+- `text-generation`: prompt वरून मजकूर तयार करणे
+- `text-classification`: मजकूर पूर्वनिर्धारित categories मध्ये वर्गीकृत करणे
+- `summarization`: महत्त्वाची माहिती ठेवून मजकूराचे छोटे रूप तयार करणे
+- `translation`: मजकूर एका भाषेतून दुसऱ्या भाषेत अनुवाद करणे
+- `zero-shot-classification`: विशिष्ट labels वर प्रशिक्षण नसतानाही मजकूर वर्गीकृत करणे
+- `feature-extraction`: मजकूराचे vector representations काढणे
+
+### Image pipelines
+
+- `image-to-text`: प्रतिमेचे वर्णन तयार करणे
+- `image-classification`: प्रतिमेमधील वस्तू ओळखणे
+- `object-detection`: प्रतिमेमधील वस्तूंचे स्थान आणि ओळख करणे
+
+### Audio pipelines
+
+- `automatic-speech-recognition`: आवाजाचे मजकूरात रूपांतर
+- `audio-classification`: ऑडिओचे वर्गीकरण
+- `text-to-speech`: मजकूराचे आवाजात रूपांतर
+
+### Multimodal pipelines
+
+- `image-text-to-text`: मजकूर prompt च्या आधारे प्रतिमेला प्रतिसाद देणे
+
+## Zero-shot classification[[zero-shot-classification]]
+
+आता आपण थोडे अधिक आव्हानात्मक कार्य पाहू — लेबल नसलेल्या मजकुराचे वर्गीकरण.
+
+```python
+from transformers import pipeline
+
+classifier = pipeline("zero-shot-classification")
+classifier(
+    "This is a course about the Transformers library",
+    candidate_labels=["education", "politics", "business"],
+)
+```
+
+```python out
+{'sequence': 'This is a course about the Transformers library',
+ 'labels': ['education', 'business', 'politics'],
+ 'scores': [0.8445963859558105, 0.111976258456707, 0.043427448719739914]}
+```
+
+या pipeline ला *zero‑shot* म्हणतात कारण यासाठी तुमच्या डेटावर मॉडेल fine‑tune करण्याची गरज नसते.
+
+## Text generation[[text-generation]]
+
+या pipeline मध्ये तुम्ही prompt देता आणि मॉडेल उर्वरित मजकूर तयार करते.
+
+```python
+from transformers import pipeline
+
+generator = pipeline("text-generation")
+generator("In this course, we will teach you how to")
+```
+
+Text generation मध्ये randomness असते, त्यामुळे परिणाम वेगळे असू शकतात.
+
+## Hub मधील कोणतेही मॉडेल वापरणे[[using-any-model-from-the-hub-in-a-pipeline]]
+
+तुम्ही [Model Hub](https://huggingface.co/models) मधील कोणतेही मॉडेल pipeline मध्ये वापरू शकता.
+
+```python
+from transformers import pipeline
+
+generator = pipeline("text-generation", model="HuggingFaceTB/SmolLM2-360M")
+generator(
+    "In this course, we will teach you how to",
+    max_length=30,
+    num_return_sequences=2,
+)
+```
+
+Model Hub वर प्रत्येक मॉडेलसाठी widget उपलब्ध असतो ज्याद्वारे तुम्ही ते थेट ब्राउझरमध्ये वापरून पाहू शकता.
+
+## Mask filling[[mask-filling]]
+
+`fill-mask` pipeline मजकूरातील रिकाम्या जागा भरते:
+
+```python
+from transformers import pipeline
+
+unmasker = pipeline("fill-mask")
+unmasker("This course will teach you all about <mask> models.", top_k=2)
+```
+
+`top_k` argument किती शक्यता दाखवायच्या ते नियंत्रित करतो.
+
+## Named entity recognition[[named-entity-recognition]]
+
+NER मध्ये मजकुरातील व्यक्ती, संस्था किंवा स्थान ओळखले जाते.
+
+```python
+from transformers import pipeline
+
+ner = pipeline("ner", grouped_entities=True)
+ner("My name is Sylvain and I work at Hugging Face in Brooklyn.")
+```
+
+मॉडेलने योग्यरीत्या Sylvain (व्यक्ती), Hugging Face (संस्था) आणि Brooklyn (स्थान) ओळखले.
+
+## Question answering[[question-answering]]
+
+ही pipeline दिलेल्या context मधून प्रश्नाचे उत्तर काढते:
+
+```python
+from transformers import pipeline
+
+question_answerer = pipeline("question-answering")
+question_answerer(
+    question="Where do I work?",
+    context="My name is Sylvain and I work at Hugging Face in Brooklyn",
+)
+```
+
+## Summarization[[summarization]]
+
+Summarization मध्ये मजकूर लहान करून त्यातील महत्त्वाची माहिती टिकवली जाते.
+
+```python
+from transformers import pipeline
+
+summarizer = pipeline("summarization")
+```
+
+तुम्ही `max_length` किंवा `min_length` वापरून summary ची लांबी नियंत्रित करू शकता.
+
+## Translation[[translation]]
+
+Translation pipeline मजकूर एका भाषेतून दुसऱ्या भाषेत अनुवाद करते:
+
+```python
+from transformers import pipeline
+
+translator = pipeline("translation", model="Helsinki-NLP/opus-mt-fr-en")
+translator("Ce cours est produit par Hugging Face.")
+```
+
+## Image आणि Audio pipelines
+
+Transformer मॉडेल्स text व्यतिरिक्त image आणि audio साठी देखील वापरता येतात.
+
+### Image classification
+
+```python
+from transformers import pipeline
+
+image_classifier = pipeline(
+    task="image-classification", model="google/vit-base-patch16-224"
+)
+```
+
+### Automatic speech recognition
+
+```python
+from transformers import pipeline
+
+transcriber = pipeline(
+    task="automatic-speech-recognition", model="openai/whisper-large-v3"
+)
+```
+
+## अनेक स्रोतांमधील डेटा एकत्र करणे
+
+Transformer मॉडेल्सचा एक महत्त्वाचा उपयोग म्हणजे वेगवेगळ्या स्रोतांमधील डेटा एकत्रितपणे प्रक्रिया करणे. उदाहरणार्थ:
+
+1. अनेक databases मध्ये शोध घेणे
+2. वेगवेगळ्या स्वरूपातील माहिती एकत्र करणे (text, image, audio)
+3. संबंधित माहितीचे एकत्रित दृश्य तयार करणे
+
+## निष्कर्ष
+
+या अध्यायातील pipelines प्रामुख्याने demonstration साठी आहेत. त्या विशिष्ट tasks साठी तयार केल्या आहेत. पुढील अध्यायात आपण `pipeline()` फंक्शनच्या आत काय घडते आणि त्याचे वर्तन कसे बदलता येते हे शिकू.

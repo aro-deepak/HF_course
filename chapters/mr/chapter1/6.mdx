@@ -1,0 +1,201 @@
+
+<CourseFloatingBanner
+    chapter={1}
+    classNames="absolute z-10 right-0 top-0"
+/>
+
+# Transformer Architectures[[transformer-architectures]]
+
+मागील विभागांमध्ये आपण Transformer ची सामान्य architecture पाहिली आणि ही मॉडेल्स विविध tasks कसे सोडवतात ते समजून घेतले. आता आपण Transformer मॉडेल्सच्या तीन मुख्य architectural variants कडे अधिक जवळून पाहू आणि प्रत्येकाचा वापर कधी करायचा हे समजून घेऊ. त्यानंतर या architectures वेगवेगळ्या language tasks साठी कशा वापरल्या जातात ते पाहू.
+
+या विभागात आपण Transformer मॉडेल्सच्या तीन मुख्य architectures बद्दल अधिक सखोल माहिती घेणार आहोत आणि त्या कधी वापरायच्या हे समजून घेणार आहोत.
+
+> [!TIP]
+> लक्षात ठेवा की बहुतेक Transformer मॉडेल्स खालील तीन architecture पैकी एक वापरतात: encoder-only, decoder-only किंवा encoder-decoder (sequence-to-sequence). या फरकांची समज असल्यास तुमच्या task साठी योग्य मॉडेल निवडणे सोपे होते.
+
+## Encoder models[[encoder-models]]
+
+<Youtube id="MUqNwgPjJvQ" />
+
+Encoder मॉडेल्स Transformer च्या फक्त encoder भागाचा वापर करतात. प्रत्येक टप्प्यावर attention layers ला पूर्ण वाक्यातील सर्व शब्द पाहता येतात. त्यामुळे या मॉडेल्समध्ये "bi-directional attention" असते आणि त्यांना *auto-encoding models* असेही म्हणतात.
+
+या मॉडेल्सचे pretraining सहसा एखादे वाक्य जाणीवपूर्वक खराब करून केले जाते (उदा. काही शब्द mask करून) आणि मॉडेलला मूळ वाक्य पुन्हा शोधण्याचे किंवा reconstruct करण्याचे काम दिले जाते.
+
+Encoder मॉडेल्स अशा tasks साठी योग्य असतात ज्यात संपूर्ण वाक्य समजणे आवश्यक असते. उदाहरणार्थ:
+
+- sentence classification
+- named entity recognition
+- word classification
+- extractive question answering
+
+> [!TIP]
+> आपण [How 🤗 Transformers solve tasks](https://huggingface.co/learn/llm-course/chapter1/5) मध्ये पाहिल्याप्रमाणे BERT सारखी encoder मॉडेल्स मजकूर समजण्यात अत्यंत सक्षम असतात कारण ती दोन्ही दिशांमधील context पाहू शकतात.
+
+या कुटुंबातील काही प्रसिद्ध मॉडेल्स:
+
+- [BERT](https://huggingface.co/docs/transformers/model_doc/bert)
+- [DistilBERT](https://huggingface.co/docs/transformers/model_doc/distilbert)
+- [ModernBERT](https://huggingface.co/docs/transformers/en/model_doc/modernbert)
+
+## Decoder models[[decoder-models]]
+
+<Youtube id="d_ixlCubqQw" />
+
+Decoder मॉडेल्स Transformer च्या फक्त decoder भागाचा वापर करतात. प्रत्येक टप्प्यावर attention layers फक्त वाक्यातील आधीचे शब्द पाहू शकतात. त्यामुळे या मॉडेल्सना *auto-regressive models* असे म्हणतात.
+
+या मॉडेल्सचे pretraining सहसा वाक्यातील पुढील शब्द भाकीत करण्यावर आधारित असते.
+
+ही मॉडेल्स text generation सारख्या tasks साठी विशेषतः उपयुक्त असतात.
+
+> [!TIP]
+> GPT सारखी decoder मॉडेल्स एकावेळी एक token भाकीत करून मजकूर तयार करतात. ती फक्त आधीचे tokens पाहू शकतात, त्यामुळे ती creative text generation साठी उत्कृष्ट असतात.
+
+या कुटुंबातील काही उदाहरणे:
+
+- [Hugging Face SmolLM Series](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct)
+- [Meta Llama Series](https://huggingface.co/docs/transformers/en/model_doc/llama4)
+- [Google Gemma Series](https://huggingface.co/docs/transformers/main/en/model_doc/gemma3)
+- [DeepSeek V3](https://huggingface.co/deepseek-ai/DeepSeek-V3)
+
+### Modern Large Language Models (LLMs)
+
+बहुतेक आधुनिक Large Language Models (LLMs) decoder-only architecture वापरतात. गेल्या काही वर्षांत या मॉडेल्सचा आकार आणि क्षमता मोठ्या प्रमाणात वाढली आहे.
+
+आधुनिक LLM सहसा दोन टप्प्यांत प्रशिक्षित केले जातात:
+
+1. **Pretraining** – मोठ्या प्रमाणातील text वर पुढील token भाकीत करणे
+2. **Instruction tuning** – मॉडेलला निर्देशांचे पालन करून उपयुक्त उत्तर देण्यासाठी fine-tune करणे
+
+या प्रक्रियेने अशी मॉडेल्स तयार झाली आहेत जी अनेक विषयांवर मानवीसारखा मजकूर समजू आणि तयार करू शकतात.
+
+#### Modern LLMs ची मुख्य क्षमता
+
+| Capability | Description | Example |
+|------------|-------------|---------|
+| Text generation | सुसंगत मजकूर तयार करणे | निबंध, कथा, ईमेल |
+| Summarization | मोठ्या मजकुराचा छोटा सारांश | रिपोर्टचे executive summary |
+| Translation | भाषांतर | English ते Spanish |
+| Question answering | प्रश्नांची उत्तरे देणे | "France ची राजधानी काय?" |
+| Code generation | कोड लिहिणे | वर्णनावर आधारित function |
+| Reasoning | टप्प्याटप्प्याने समस्या सोडवणे | गणिती प्रश्न |
+| Few-shot learning | काही उदाहरणांवरून शिकणे | 2-3 उदाहरणांवर classification |
+
+तुम्ही Hugging Face Hub वर decoder आधारित LLM थेट ब्राउझरमध्ये वापरून पाहू शकता. उदाहरण:
+
+<iframe
+	src="https://huggingface.co/openai-community/gpt2"
+	frameborder="0"
+	width="100%"
+	height="450"
+></iframe>
+
+## Sequence-to-sequence models[[sequence-to-sequence-models]]
+
+<Youtube id="0_4KEb08xrE" />
+
+Encoder-decoder मॉडेल्स (sequence-to-sequence मॉडेल्स) Transformer च्या दोन्ही भागांचा वापर करतात.
+
+Encoder वाक्यातील सर्व शब्द पाहू शकतो, तर decoder फक्त आधीचे शब्द पाहू शकतो.
+
+या मॉडेल्सचे pretraining सहसा खराब केलेले input पुन्हा reconstruct करण्यावर आधारित असते. उदाहरणार्थ T5 मध्ये text मधील काही भाग mask करून मॉडेलला ते पुन्हा भाकीत करायला लावले जाते.
+
+Sequence-to-sequence मॉडेल्स खालील tasks साठी योग्य असतात:
+
+- summarization
+- translation
+- generative question answering
+
+> [!TIP]
+> BART आणि T5 सारखी मॉडेल्स encoder च्या context understanding आणि decoder च्या generation क्षमता एकत्र करतात.
+
+### Practical applications
+
+Sequence-to-sequence मॉडेल्स खालील applications मध्ये उत्कृष्ट काम करतात:
+
+| Application | Description | Example Model |
+|-------------|-------------|---------------|
+| Machine translation | भाषांतर | Marian, T5 |
+| Text summarization | मजकूराचा सारांश | BART, T5 |
+| Data-to-text generation | structured data चे natural language मध्ये रूपांतर | T5 |
+| Grammar correction | व्याकरण सुधारणा | T5 |
+| Question answering | context वर आधारित उत्तर | BART, T5 |
+
+Interactive translation demo:
+
+<iframe
+	src="https://course-demos-speech-to-speech-translation.hf.space"
+	frameborder="0"
+	width="850"
+	height="450"
+></iframe>
+
+या कुटुंबातील मॉडेल्स:
+
+- [BART](https://huggingface.co/docs/transformers/model_doc/bart)
+- [mBART](https://huggingface.co/docs/transformers/model_doc/mbart)
+- [Marian](https://huggingface.co/docs/transformers/model_doc/marian)
+- [T5](https://huggingface.co/docs/transformers/model_doc/t5)
+
+## योग्य architecture कसे निवडावे[[choosing-the-right-architecture]]
+
+एखाद्या NLP task साठी योग्य architecture कसे निवडायचे? खाली मार्गदर्शक आहे:
+
+| Task | Suggested Architecture | Examples |
+|------|------------------------|----------|
+| Text classification | Encoder | BERT |
+| Text generation | Decoder | GPT |
+| Translation | Encoder-Decoder | T5 |
+| Summarization | Encoder-Decoder | BART |
+| Named entity recognition | Encoder | BERT |
+| Question answering | Encoder | BERT |
+| Conversational AI | Decoder | GPT |
+
+> [!TIP]
+> मॉडेल निवडताना खालील प्रश्न विचार करा:
+>
+> 1. Task ला bidirectional understanding हवे आहे का?
+> 2. नवीन मजकूर तयार करायचा आहे का?
+> 3. एका sequence चे दुसऱ्यात रूपांतर करायचे आहे का?
+>
+> या उत्तरांवरून योग्य architecture निवडता येते.
+
+## LLMs ची उत्क्रांती
+
+Large Language Models गेल्या काही वर्षांत झपाट्याने विकसित झाले आहेत आणि प्रत्येक generation मध्ये त्यांची क्षमता वाढली आहे.
+
+## Attention mechanisms[[attention-mechanisms]]
+
+बहुतेक transformer मॉडेल्स full attention वापरतात. यात attention matrix square असते. पण sequence खूप मोठी असल्यास computation महाग होते.
+
+Longformer आणि Reformer सारखी मॉडेल्स sparse attention वापरून training वेगवान करतात.
+
+> [!TIP]
+> Standard attention ची complexity O(n²) असते. sequence खूप मोठी असल्यास ही समस्या बनते.
+
+### LSH attention
+
+[Reformer](https://huggingface.co/docs/transformers/model_doc/reformer) मध्ये LSH attention वापरले जाते. यात प्रत्येक query साठी फक्त जवळचे keys वापरले जातात.
+
+Hash function वापरून query आणि key जवळ आहेत का ते ठरवले जाते.
+
+### Local attention
+
+[Longformer](https://huggingface.co/docs/transformers/model_doc/longformer) मध्ये local attention वापरले जाते. यात token फक्त आसपासच्या tokens कडे लक्ष देतो.
+
+काही विशेष tokens ला global attention दिले जाते.
+
+<div class="flex justify-center">
+    <img scale="50 %" align="center" src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/local_attention_mask.png"/>
+</div>
+
+### Axial positional encodings
+
+[Reformer](https://huggingface.co/docs/transformers/model_doc/reformer) axial positional encodings वापरते.
+
+परंपरागत positional encoding matrix खूप मोठी असते. Axial encoding मध्ये ती दोन छोट्या matrices मध्ये विभागली जाते.
+
+## Conclusion[[conclusion]]
+
+या विभागात आपण तीन मुख्य Transformer architectures आणि काही विशेष attention mechanisms पाहिले. योग्य NLP task साठी योग्य architecture निवडण्यासाठी ही समज अत्यंत महत्त्वाची आहे.
+
+कोर्सच्या पुढील भागात तुम्ही या architectures सोबत प्रत्यक्ष काम कराल आणि त्यांना तुमच्या tasks साठी fine-tune करायला शिकाल.

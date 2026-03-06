@@ -1,0 +1,256 @@
+
+<!-- DISABLE-FRONTMATTER-SECTIONS -->
+
+# Unrated quiz (गुणांकन नसलेली चाचणी)[[ungraded-quiz]]
+
+<CourseFloatingBanner
+    chapter={1}
+    classNames="absolute z-10 right-0 top-0"
+/>
+
+आत्तापर्यंत या chapter मध्ये आपण खूप विषय पाहिले आहेत! जर तुम्हाला सर्व तपशील पूर्णपणे समजले नसतील तर काळजी करू नका. या quiz च्या मदतीने आतापर्यंत काय शिकलात यावर थोडा विचार करण्याची ही संधी आहे.
+
+ही quiz **गुणांकन नसलेली (ungraded)** आहे, त्यामुळे तुम्ही ती हवी तितक्या वेळा करून पाहू शकता. जर काही प्रश्न अवघड वाटले तर दिलेल्या टिप्स पाहा आणि संबंधित material पुन्हा वाचा. certification exam मध्ये या विषयांवर पुन्हा प्रश्न विचारले जातील.
+
+### 1. Hub वर जाऊन `roberta-large-mnli` checkpoint शोधा. ते कोणता task करते?
+
+<Question
+	choices={[
+		{
+			text: "Summarization",
+			explain: "पुन्हा <a href=\"https://huggingface.co/roberta-large-mnli\">roberta-large-mnli page</a> पहा."
+		},
+		{
+			text: "Text classification",
+			explain: "अधिक नेमकेपणाने सांगायचे तर हे दोन वाक्ये तर्कशुद्धरीत्या जोडलेली आहेत का हे वर्गीकृत करते (contradiction, neutral, entailment) — या task ला <em>natural language inference</em> असे म्हणतात.",
+			correct: true
+		},
+		{
+			text: "Text generation",
+			explain: "पुन्हा <a href=\"https://huggingface.co/roberta-large-mnli\">roberta-large-mnli page</a> पहा."
+		}
+	]}
+/>
+
+### 2. खालील code काय return करेल?
+
+```py
+from transformers import pipeline
+
+ner = pipeline("ner", grouped_entities=True)
+ner("My name is Sylvain and I work at Hugging Face in Brooklyn.")
+```
+
+<Question
+	choices={[
+		{
+			text: "हे वाक्यासाठी classification scores परत करेल, "positive" किंवा "negative" labels सह.",
+			explain: "हे चुकीचे आहे — हे <code>sentiment-analysis</code> pipeline साठी लागू होते."
+		},
+		{
+			text: "हे वाक्य पूर्ण करणारा generated text परत करेल.",
+			explain: "हे चुकीचे आहे — ते <code>text-generation</code> pipeline असेल.",
+		},
+		{
+			text: "हे व्यक्ती, संस्था किंवा स्थान दर्शवणारे शब्द परत करेल.",
+			explain: "तसेच <code>grouped_entities=True</code> असल्याने "Hugging Face" सारख्या एकाच entity मधील शब्द एकत्र group केले जातील.",
+			correct: true
+		}
+	]}
+/>
+
+### 3. या code sample मध्ये ... च्या जागी काय असावे?
+
+```py
+from transformers import pipeline
+
+filler = pipeline("fill-mask", model="bert-base-cased")
+result = filler("...")
+```
+
+<Question
+	choices={[
+		{
+			text: "This &#60;mask> has been waiting for you.",
+			explain: "हे चुकीचे आहे. <code>bert-base-cased</code> model card पुन्हा पाहा."
+		},
+		{
+			text: "This [MASK] has been waiting for you.",
+			explain: "या मॉडेलचा mask token [MASK] आहे.",
+			correct: true
+		},
+		{
+			text: "This man has been waiting for you.",
+			explain: "हे चुकीचे आहे. हा pipeline masked शब्द भरतो, त्यामुळे mask token आवश्यक आहे."
+		}
+	]}
+/>
+
+### 4. खालील code का fail होईल?
+
+```py
+from transformers import pipeline
+
+classifier = pipeline("zero-shot-classification")
+result = classifier("This is a course about the Transformers library")
+```
+
+<Question
+	choices={[
+		{
+			text: "या pipeline ला text classify करण्यासाठी labels द्यावे लागतात.",
+			explain: "बरोबर — योग्य code मध्ये <code>candidate_labels=[...]</code> असणे आवश्यक आहे.",
+			correct: true
+		},
+		{
+			text: "या pipeline ला एकापेक्षा जास्त वाक्यांची आवश्यकता असते.",
+			explain: "हे चुकीचे आहे."
+		},
+		{
+			text: "🤗 Transformers library मध्येच काहीतरी बिघाड आहे.",
+			explain: "या उत्तरावर आम्ही टिप्पणी करणार नाही!"
+		},
+		{
+			text: "या pipeline ला मोठा input हवा असतो; हा खूप लहान आहे.",
+			explain: "हे चुकीचे आहे."
+		}
+	]}
+/>
+
+### 5. "Transfer learning" म्हणजे काय?
+
+<Question
+	choices={[
+		{
+			text: "Pretrained model चे ज्ञान त्याच dataset वर training करून नवीन मॉडेलमध्ये transfer करणे.",
+			explain: "नाही, ते दोन समान मॉडेल्स होतील."
+		},
+		{
+			text: "Pretrained model चे weights वापरून नवीन मॉडेल initialize करून त्याचे ज्ञान transfer करणे.",
+			explain: "नवीन task वर training करताना पहिल्या मॉडेलचे ज्ञान transfer होते.",
+			correct: true
+		},
+		{
+			text: "नवीन मॉडेलला त्याच architecture ने तयार करून ज्ञान transfer करणे.",
+			explain: "Architecture म्हणजे फक्त मॉडेलची रचना आहे; यात ज्ञान transfer होत नाही."
+		}
+	]}
+/>
+
+### 6. True किंवा False? Language model ला pretraining साठी सहसा labels लागत नाहीत.
+
+<Question
+	choices={[
+		{
+			text: "True",
+			explain: "Pretraining सहसा <em>self-supervised</em> असते — labels input मधून आपोआप तयार होतात.",
+			correct: true
+		},
+		{
+			text: "False",
+			explain: "हे योग्य उत्तर नाही."
+		}
+	]}
+/>
+
+### 7. "model", "architecture", आणि "weights" या संज्ञा कोणते वाक्य सर्वोत्तम समजावते?
+
+<Question
+	choices={[
+		{
+			text: "जर model एक इमारत असेल तर architecture तिचा नकाशा आहे आणि weights आत राहणारे लोक आहेत.",
+			explain: "या उदाहरणात weights म्हणजे इमारत बांधण्यासाठी वापरलेले साहित्य असतील."
+		},
+		{
+			text: "Architecture म्हणजे नकाशा आणि weights म्हणजे त्या नकाशातील शहर.",
+			explain: "ही तुलना अचूक नाही."
+		},
+		{
+			text: "Architecture म्हणजे मॉडेल तयार करणाऱ्या गणिती functions ची मालिका आणि weights म्हणजे त्या functions चे parameters.",
+			explain: "एकाच architecture वर वेगवेगळे weights वापरून वेगवेगळी मॉडेल्स तयार करता येतात.",
+			correct: true
+		}
+	]}
+/>
+
+### 8. Prompt पूर्ण करून generated text तयार करण्यासाठी कोणत्या प्रकारचे मॉडेल वापराल?
+
+<Question
+	choices={[
+		{
+			text: "Encoder model",
+			explain: "Encoder मॉडेल संपूर्ण वाक्याची representation तयार करते."
+		},
+		{
+			text: "Decoder model",
+			explain: "Decoder मॉडेल prompt वरून text generation साठी योग्य आहेत.",
+			correct: true
+		},
+		{
+			text: "Sequence-to-sequence model",
+			explain: "हे मॉडेल input वाक्यांवर आधारित output तयार करण्यासाठी योग्य आहेत."
+		}
+	]}
+/>
+
+### 9. Text summarization साठी कोणता प्रकारचा मॉडेल वापराल?
+
+<Question
+	choices={[
+		{
+			text: "Encoder model",
+			explain: "Encoder मॉडेल classification सारख्या tasks साठी योग्य आहेत."
+		},
+		{
+			text: "Decoder model",
+			explain: "Decoder मॉडेल text generation साठी योग्य असले तरी पूर्ण context वापरून summarization करणे त्यांना अवघड असते."
+		},
+		{
+			text: "Sequence-to-sequence model",
+			explain: "Summarization साठी sequence-to-sequence मॉडेल सर्वोत्तम आहेत.",
+			correct: true
+		}
+	]}
+/>
+
+### 10. Text inputs ला labels देण्यासाठी कोणत्या प्रकारचे मॉडेल वापराल?
+
+<Question
+	choices={[
+		{
+			text: "Encoder model",
+			explain: "Encoder मॉडेल संपूर्ण वाक्याची representation तयार करतात जी classification साठी योग्य असते.",
+			correct: true
+		},
+		{
+			text: "Decoder model",
+			explain: "Decoder मॉडेल text generation साठी जास्त योग्य आहेत."
+		},
+		{
+			text: "Sequence-to-sequence model",
+			explain: "हे मॉडेल input वरून text generate करण्यासाठी जास्त योग्य आहेत.",
+		}
+	]}
+/>
+
+### 11. मॉडेलमध्ये दिसणाऱ्या bias चे स्रोत कोणते असू शकतात?
+
+<Question
+	choices={[
+		{
+			text: "Fine-tuned मॉडेलने pretrained मॉडेलकडून bias घेतला असू शकतो.",
+			explain: "Transfer Learning करताना pretrained मॉडेलमधील bias टिकून राहू शकतो.",
+			correct: true
+		},
+		{
+			text: "Training data मध्ये bias असू शकतो.",
+			explain: "हा सर्वात सामान्य स्रोत आहे.",
+			correct: true
+		},
+		{
+			text: "Model training साठी वापरलेला metric bias असू शकतो.",
+			explain: "Model निवडलेल्या metric साठी optimize करतो.",
+			correct: true
+		}
+	]}
+/>

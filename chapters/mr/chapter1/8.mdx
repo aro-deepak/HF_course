@@ -1,0 +1,209 @@
+
+# LLMs सह Text Generation Inference चे सखोल विश्लेषण[[inference-with-llms]]
+
+<CourseFloatingBanner
+    chapter={1}
+    classNames="absolute z-10 right-0 top-0"
+/>
+
+<Youtube id="Xp2w1_LKZN4" />
+
+आतापर्यंत आपण transformer architecture विविध tasks च्या संदर्भात पाहिली आहे, जसे की text classification किंवा summarization. परंतु Large Language Models (LLMs) सर्वाधिक वापरले जातात ते **text generation** साठी — आणि या अध्यायात आपण याच विषयाचा अभ्यास करणार आहोत.
+
+या पानावर आपण LLM inference मागील मुख्य संकल्पना समजून घेऊ. मॉडेल्स text कसे generate करतात आणि inference प्रक्रियेत कोणते महत्त्वाचे घटक असतात हे आपण पाहू.
+
+## मूलभूत गोष्टी समजून घेणे
+
+सर्वात आधी मूलभूत संकल्पना पाहू. **Inference** म्हणजे प्रशिक्षित LLM वापरून दिलेल्या input prompt वरून मानवासारखा मजकूर तयार करण्याची प्रक्रिया.
+
+Language models त्यांच्या training दरम्यान शिकलेल्या ज्ञानाचा वापर करून एकावेळी एक शब्द तयार करतात. मॉडेल अब्जावधी parameters मधून शिकलेल्या probabilities चा वापर करून पुढील token भाकीत करते.
+
+ही sequential generation प्रक्रिया LLM ला सुसंगत आणि संदर्भानुसार योग्य मजकूर तयार करण्यास सक्षम करते.
+
+## Attention ची भूमिका
+
+Attention mechanism मुळे LLM ला context समजण्याची आणि सुसंगत उत्तर तयार करण्याची क्षमता मिळते.
+
+उदाहरणार्थ, वाक्य पहा:
+
+*"The capital of France is ..."*
+
+येथे "France" आणि "capital" हे शब्द महत्त्वाचे आहेत कारण ते पुढील शब्द "Paris" असण्याची शक्यता दर्शवतात.
+
+मॉडेलला महत्त्वाच्या माहितीवर लक्ष केंद्रित करण्याची जी क्षमता आहे तिला **attention** म्हणतात.
+
+<img src="https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/unit1/AttentionSceneFinal.gif" alt="Visual Gif of Attention" width="60%">
+
+पुढील token भाकीत करण्यासाठी सर्वात महत्त्वाचे शब्द शोधण्याची ही प्रक्रिया अत्यंत प्रभावी सिद्ध झाली आहे.
+
+BERT आणि GPT‑2 पासून LLM training ची मूलभूत कल्पना (पुढील token भाकीत करणे) जवळजवळ समान आहे, परंतु neural networks चे scale वाढवणे आणि attention mechanism लांब sequences साठी कार्यक्षम बनवणे यात मोठी प्रगती झाली आहे.
+
+> [!TIP]
+> थोडक्यात सांगायचे तर attention mechanism मुळे LLM सुसंगत आणि context-aware text तयार करू शकतात.
+
+### Context Length आणि Attention Span
+
+आता आपण पाहू की LLM प्रत्यक्षात किती context हाताळू शकतो.
+
+**Context length** म्हणजे मॉडेल एकावेळी process करू शकणाऱ्या tokens ची कमाल संख्या. याला मॉडेलची "working memory" असेही म्हणता येईल.
+
+ही क्षमता खालील घटकांवर अवलंबून असते:
+
+- मॉडेलची architecture आणि आकार
+- उपलब्ध computational resources
+- input आणि output ची complexity
+
+सिद्धांततः आपण अमर्याद context देऊ शकतो, पण hardware मर्यादा आणि computational खर्चामुळे ते शक्य नसते.
+
+> [!TIP]
+> Context length म्हणजे response तयार करताना मॉडेल एकावेळी विचारात घेऊ शकणाऱ्या tokens ची कमाल संख्या.
+
+### Prompting ची कला
+
+जेव्हा आपण LLM ला माहिती देतो तेव्हा आपण input अशा प्रकारे तयार करतो की मॉडेल इच्छित output तयार करेल. याला **prompting** म्हणतात.
+
+LLM माहिती कशी process करतात हे समजल्यास आपण अधिक प्रभावी prompts तयार करू शकतो.
+
+मॉडेलचे मुख्य काम पुढील token भाकीत करणे असल्यामुळे input sequence चे wording अत्यंत महत्त्वाचे ठरते.
+
+> [!TIP]
+> चांगला prompt तयार केल्यास LLM ला अपेक्षित output कडे मार्गदर्शन करणे सोपे होते.
+
+## Two‑Phase Inference Process
+
+LLM प्रत्यक्षात text कसे तयार करतात ते आता पाहू. ही प्रक्रिया दोन मुख्य टप्प्यांत विभागली जाते:
+
+- **Prefill phase**
+- **Decode phase**
+
+### Prefill Phase
+
+Prefill phase म्हणजे preparation stage — जिथे input process केले जाते.
+
+या टप्प्यात तीन मुख्य पायऱ्या असतात:
+
+1. **Tokenization** – input text चे tokens मध्ये रूपांतर
+2. **Embedding conversion** – tokens चे numerical representations मध्ये रूपांतर
+3. **Initial processing** – embeddings neural network मधून process करून context समजणे
+
+ही प्रक्रिया computationally intensive असते कारण सर्व tokens एकाच वेळी process करावे लागतात.
+
+<iframe
+	src="https://agents-course-the-tokenizer-playground.static.hf.space"
+	frameborder="0"
+	width="850"
+	height="450"
+></iframe>
+
+### Decode Phase
+
+Prefill नंतर **decode phase** मध्ये प्रत्यक्ष text generation सुरू होते.
+
+मॉडेल autoregressive पद्धतीने एकावेळी एक token तयार करते.
+
+प्रत्येक token साठी खालील पायऱ्या होतात:
+
+1. Attention computation
+2. Probability calculation
+3. Token selection
+4. Continuation check
+
+या टप्प्यात memory जास्त लागते कारण मॉडेलला आधीचे tokens लक्षात ठेवावे लागतात.
+
+## Sampling Strategies
+
+Text generation नियंत्रित करण्यासाठी विविध sampling strategies वापरल्या जातात.
+
+<iframe
+	src="https://agents-course-decoding-visualizer.hf.space"
+	frameborder="0"
+	width="850"
+	height="450"
+></iframe>
+
+### Token Selection
+
+मॉडेल प्रत्येक token साठी probabilities (logits) तयार करते. त्यातून पुढील token निवडला जातो.
+
+1. **Raw logits** – प्रत्येक शब्दाची प्राथमिक probability
+2. **Temperature** – randomness नियंत्रित करते
+3. **Top‑p sampling** – सर्वात शक्य tokens चा subset वापरते
+4. **Top‑k filtering** – top k tokens पर्यंत मर्यादा
+
+### Repetition Control
+
+LLM कधी कधी शब्द पुन्हा पुन्हा वापरतात. हे टाळण्यासाठी penalties वापरल्या जातात:
+
+1. **Presence penalty** – आधी आलेल्या token ला penalty
+2. **Frequency penalty** – token जास्त वेळा वापरला तर probability कमी
+
+### Generation Length Control
+
+Text किती लांब असावा हे नियंत्रित करण्यासाठी:
+
+1. Token limits
+2. Stop sequences
+3. End‑of‑sequence detection
+
+### Beam Search
+
+Beam search मध्ये एकावेळी अनेक संभाव्य sequences explore केल्या जातात.
+
+यामुळे text अधिक coherent तयार होतो पण computation जास्त लागते.
+
+<iframe
+	src="https://agents-course-beam-search-visualizer.hf.space"
+	frameborder="0"
+	width="850"
+	height="450"
+></iframe>
+
+## Practical Challenges आणि Optimization
+
+LLM deploy करताना काही practical challenges येतात.
+
+### Performance Metrics
+
+LLM inference साठी महत्त्वाचे metrics:
+
+1. **Time to First Token (TTFT)** – पहिला token मिळण्यासाठी लागणारा वेळ
+2. **Time Per Output Token (TPOT)** – प्रत्येक पुढील token साठी लागणारा वेळ
+3. **Throughput** – एकावेळी किती requests handle करता येतात
+4. **VRAM usage** – GPU memory वापर
+
+### Context Length Challenge
+
+लांब context अधिक माहिती देतो पण काही समस्या निर्माण करतो:
+
+- Memory usage वाढते
+- Processing speed कमी होते
+- VRAM balancing आवश्यक होते
+
+उदाहरणार्थ [Qwen2.5‑1M](https://huggingface.co/Qwen/Qwen2.5-14B-Instruct-1M) मध्ये 1M tokens context window आहे, पण inference धीमा होतो.
+
+### KV Cache Optimization
+
+KV (Key‑Value) caching ही एक महत्त्वाची optimization आहे.
+
+यामुळे:
+
+- repeated calculations कमी होतात
+- generation speed वाढतो
+- long context generation शक्य होते
+
+तोटा म्हणजे memory usage वाढतो.
+
+## Conclusion[[conclusion]]
+
+LLM inference समजणे अत्यंत महत्त्वाचे आहे कारण यामुळे आपण मॉडेल्स प्रभावीपणे deploy आणि optimize करू शकतो.
+
+आपण खालील गोष्टी पाहिल्या:
+
+- attention आणि context ची भूमिका
+- two‑phase inference process
+- sampling strategies
+- practical challenges आणि optimizations
+
+हे concepts समजल्यास तुम्ही LLM आधारित applications अधिक प्रभावीपणे तयार करू शकता.
+
+LLM inference क्षेत्र सतत विकसित होत आहे, त्यामुळे नवीन techniques आणि optimizations बद्दल सतत शिकत राहा.
